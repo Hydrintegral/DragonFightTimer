@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class DragonFightTimer implements ModInitializer {
 	public static final String MOD_ID = "dragonfighttimer";
+    static boolean crystalMessageFound = false;
     static boolean wasDragonAlive = false;
     static long startTime = 0;
 
@@ -36,48 +37,63 @@ public class DragonFightTimer implements ModInitializer {
         }
     }
 
+    public static Text timerMessage(long start, int minutes, double seconds) {
+        if (start == 0) {
+            return Text.literal("[").formatted(Formatting.DARK_GRAY)
+                    .append(Text.literal("D").formatted(Formatting.DARK_AQUA))
+                    .append(Text.literal("F").formatted(Formatting.GOLD))
+                    .append(Text.literal("Timer").formatted(Formatting.AQUA))
+                    .append(Text.literal("] ").formatted(Formatting.DARK_GRAY))
+                    .append(Text.literal("Failed to time the fight.").formatted(Formatting.RED));
+
+        }
+
+        if (minutes == 0) {
+            return Text.literal("[").formatted(Formatting.DARK_GRAY)
+                    .append(Text.literal("D").formatted(Formatting.DARK_AQUA))
+                    .append(Text.literal("F").formatted(Formatting.GOLD))
+                    .append(Text.literal("Timer").formatted(Formatting.AQUA))
+                    .append(Text.literal("] ").formatted(Formatting.DARK_GRAY))
+                    .append(Text.literal("Time elapsed: ").formatted(Formatting.GOLD))
+                    .append(Text.literal(String.format("%05.2f", seconds) + "s").formatted(Formatting.YELLOW))
+                    .append(Text.literal(".").formatted(Formatting.GOLD));
+        } else {
+            return Text.literal("[").formatted(Formatting.DARK_GRAY)
+                    .append(Text.literal("D").formatted(Formatting.DARK_AQUA))
+                    .append(Text.literal("F").formatted(Formatting.GOLD))
+                    .append(Text.literal("Timer").formatted(Formatting.AQUA))
+                    .append(Text.literal("] ").formatted(Formatting.DARK_GRAY))
+                    .append(Text.literal("Time elapsed: ").formatted(Formatting.GOLD))
+                    .append(Text.literal(minutes + "m " + String.format("%05.2f", seconds) + "s").formatted(Formatting.YELLOW))
+                    .append(Text.literal(".").formatted(Formatting.GOLD));
+        }
+    }
+
     public static void onReceiveGameMessage(Text message, boolean overlay) {
+        if (message.getString().equals("[DragonFight] Dragon fight begins now: Place!")) {
+            crystalMessageFound = true;
+        }
+
         if (message.getString().startsWith("[DragonFight] The dragon has been slain by ") && message.getString().endsWith("!")) {
-            if (startTime > 0) {
-                // It's highly unlikely a DragonFight will go into the hour mark
+            // It's highly unlikely a DragonFight will go into the hour mark
 
-                double timeElapsed = System.nanoTime() - startTime;
-                int minutesElapsed = (int) (timeElapsed / 60_000_000_000L);
-                double secondsElapsed = ((timeElapsed / 1_000_000_000) % 60);
+            double timeElapsed = System.nanoTime() - startTime;
+            int minutesElapsed = (int) (timeElapsed / 60_000_000_000L);
+            double secondsElapsed = ((timeElapsed / 1_000_000_000) % 60);
 
-                if (minutesElapsed != 0) {
-                    MinecraftClient.getInstance().inGameHud.getChatHud()
-                            .addMessage(Text.literal("[").formatted(Formatting.DARK_GRAY)
-                                    .append(Text.literal("D").formatted(Formatting.DARK_AQUA))
-                                    .append(Text.literal("F").formatted(Formatting.GOLD))
-                                    .append(Text.literal("Timer").formatted(Formatting.AQUA))
-                                    .append(Text.literal("] ").formatted(Formatting.DARK_GRAY))
-                                    .append(Text.literal("Time elapsed: ").formatted(Formatting.GOLD))
-                                    .append(Text.literal(minutesElapsed + "m " + String.format("%05.2f", secondsElapsed) + "s").formatted(Formatting.YELLOW))
-                                    .append(Text.literal(".").formatted(Formatting.GOLD))
-                            );
-                } else {
-                    MinecraftClient.getInstance().inGameHud.getChatHud()
-                            .addMessage(Text.literal("[").formatted(Formatting.DARK_GRAY)
-                                    .append(Text.literal("D").formatted(Formatting.DARK_AQUA))
-                                    .append(Text.literal("F").formatted(Formatting.GOLD))
-                                    .append(Text.literal("Timer").formatted(Formatting.AQUA))
-                                    .append(Text.literal("] ").formatted(Formatting.DARK_GRAY))
-                                    .append(Text.literal("Time elapsed: ").formatted(Formatting.GOLD))
-                                    .append(Text.literal(String.format("%05.2f", secondsElapsed) + "s").formatted(Formatting.YELLOW))
-                                    .append(Text.literal(".").formatted(Formatting.GOLD))
-                            );
-                }
-
+            if (crystalMessageFound) {
+                MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(timerMessage(startTime, minutesElapsed, secondsElapsed));
+                crystalMessageFound = false;
             } else {
                 MinecraftClient.getInstance().inGameHud.getChatHud()
                         .addMessage(Text.literal("[").formatted(Formatting.DARK_GRAY)
-                                .append(Text.literal("D").formatted(Formatting.DARK_AQUA))
-                                .append(Text.literal("F").formatted(Formatting.GOLD))
-                                .append(Text.literal("Timer").formatted(Formatting.AQUA))
-                                .append(Text.literal("] ").formatted(Formatting.DARK_GRAY))
-                                .append(Text.literal("Failed to time the fight.").formatted(Formatting.RED))
-                        );
+                            .append(Text.literal("D").formatted(Formatting.DARK_AQUA))
+                            .append(Text.literal("F").formatted(Formatting.GOLD))
+                            .append(Text.literal("Timer").formatted(Formatting.AQUA))
+                            .append(Text.literal("] ").formatted(Formatting.DARK_GRAY))
+                            .append(Text.literal("Caution: The crystal place message was not recorded, so the following time may be inaccurate.").formatted(Formatting.RED))
+                );
+                MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(timerMessage(startTime, minutesElapsed, secondsElapsed));
             }
         }
     }
