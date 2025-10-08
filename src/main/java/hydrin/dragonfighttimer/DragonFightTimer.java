@@ -53,7 +53,7 @@ public class DragonFightTimer implements ModInitializer {
                                     .append(Text.literal("Timer").formatted(Formatting.AQUA))
                                     .append(Text.literal("] ").formatted(Formatting.DARK_GRAY))
                                     .append(Text.literal("Time elapsed: ").formatted(Formatting.GOLD))
-                                    .append(Text.literal(minutesElapsed + "m " + String.format("%.2f", secondsElapsed) + "s").formatted(Formatting.YELLOW))
+                                    .append(Text.literal(minutesElapsed + "m " + String.format("%05.2f", secondsElapsed) + "s").formatted(Formatting.YELLOW))
                                     .append(Text.literal(".").formatted(Formatting.GOLD))
                             );
                 } else {
@@ -64,7 +64,7 @@ public class DragonFightTimer implements ModInitializer {
                                     .append(Text.literal("Timer").formatted(Formatting.AQUA))
                                     .append(Text.literal("] ").formatted(Formatting.DARK_GRAY))
                                     .append(Text.literal("Time elapsed: ").formatted(Formatting.GOLD))
-                                    .append(Text.literal(String.format("%.2f", secondsElapsed) + "s").formatted(Formatting.YELLOW))
+                                    .append(Text.literal(String.format("%05.2f", secondsElapsed) + "s").formatted(Formatting.YELLOW))
                                     .append(Text.literal(".").formatted(Formatting.GOLD))
                             );
                 }
