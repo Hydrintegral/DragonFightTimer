@@ -4,4 +4,4 @@ Times CubeKrowd dragon fights from the instant the dragon entity exists to the k
 
 ## Download
 
-Pending
+You can find any downloads in the **Versions** tab on this mod's [Modrinth page](https://modrinth.com/mod/ckdragonfighttimer).
