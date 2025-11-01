@@ -70,11 +70,13 @@ public class DragonFightTimer implements ModInitializer {
     }
 
     public static void onReceiveGameMessage(Text message, boolean overlay) {
-        if (message.getString().equals("[DragonFight] Dragon fight begins now: Place!")) {
+        String msgString = message.getString();
+
+        if (msgString.equals("[DragonFight] Dragon fight begins now: Place!")) {
             crystalMessageFound = true;
         }
 
-        if (message.getString().startsWith("[DragonFight] The dragon has been slain by ") && message.getString().endsWith("!")) {
+        if (msgString.startsWith("[DragonFight] The dragon has been slain by ")) {
             // It's highly unlikely a DragonFight will go into the hour mark
 
             double timeElapsed = System.nanoTime() - startTime;
