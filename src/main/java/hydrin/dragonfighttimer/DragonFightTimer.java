@@ -31,8 +31,6 @@ public class DragonFightTimer implements ModInitializer {
                     startTime = System.nanoTime();
                 }
                 wasDragonAlive = true;
-            } else {
-                wasDragonAlive = false;
             }
         }
     }
@@ -85,6 +83,7 @@ public class DragonFightTimer implements ModInitializer {
 
             if (crystalMessageFound) {
                 MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(timerMessage(startTime, minutesElapsed, secondsElapsed));
+                wasDragonAlive = false;
                 crystalMessageFound = false;
             } else {
                 MinecraftClient.getInstance().inGameHud.getChatHud()
@@ -96,6 +95,7 @@ public class DragonFightTimer implements ModInitializer {
                             .append(Text.literal("Caution: The crystal place message was not recorded, so the following time may be inaccurate.").formatted(Formatting.RED))
                 );
                 MinecraftClient.getInstance().inGameHud.getChatHud().addMessage(timerMessage(startTime, minutesElapsed, secondsElapsed));
+                wasDragonAlive = false;
             }
         }
     }
