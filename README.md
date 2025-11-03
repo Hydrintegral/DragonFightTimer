@@ -8,4 +8,4 @@ You can find any downloads in the **Versions** tab on this mod's [Modrinth page]
 
 ## Credits
 
-Special thanks to Kaybeo for designing the mod icon!
+Special thanks to **Kaybeo** for designing the mod icon!
